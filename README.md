@@ -8,19 +8,19 @@ Each puzzle day is built as a **separate executable** using **CMake**, with its 
 This project uses **CMake** to generate platform-specific build files.  
 Make sure you have a C++17 compiler and CMake ≥ 3.10 installed.
 
-### Build instructions (Linux / WSL)
+## Build instructions (Linux / WSL)
 
-# Clone the repo
+### Clone the repo
 git clone https://github.com/kactasar/AOC-2021.git
 cd AOC-2021
 
-# Create and enter a build directory
+### Create and enter a build directory
 mkdir build && cd build
 
-# Configure CMake
+### Configure CMake
 cmake ..
 
-# Build all executables
+### Build all executables
 cmake --build .
 
 After building, all executables will be located in build/bin/
