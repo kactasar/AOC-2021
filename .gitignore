@@ -1,0 +1,64 @@
+# --- Build directories ---
+/build/
+/bin/
+*/build/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/cmake_install.cmake
+/install_manifest.txt
+
+# --- Compiled binaries and objects ---
+*.o
+*.obj
+*.so
+*.dll
+*.a
+*.lib
+*.exe
+*.out
+*.pdb
+
+# --- Temporary files ---
+*.log
+*.tmp
+*.swp
+*.swo
+
+# --- IDE and Editor directories ---
+# VS Code
+.vscode/
+.history/
+
+# CLion / JetBrains IDEs
+.idea/
+
+# Visual Studio (just in case)
+*.user
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.db
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- CMake export or testing junk ---
+Testing/
+CTestTestfile.cmake
+_deps/
+
+# --- Misc tools ---
+*.cache
+*.pyc
+
+# ==========================================
+#   Keep these (do NOT ignore):
+# ==========================================
+# src/ -> your source code
+# data/ -> your AoC input files
+# CMakeLists.txt
+# README.md
+# .gitignore (this file)
+# ==========================================
