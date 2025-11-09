@@ -10,6 +10,7 @@ Make sure you have a C++17 compiler and CMake ≥ 3.10 installed.
 
 ## Build instructions (Linux / WSL)
 
+```bash
 ### Clone the repo
 git clone https://github.com/kactasar/AOC-2021.git
 cd AOC-2021
