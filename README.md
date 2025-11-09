@@ -22,3 +22,6 @@ cmake ..
 
 # Build all executables
 cmake --build .
+
+After building, all executables will be located in build/bin/
+Puzzle input files will be automatically copied to build/bin/data/
