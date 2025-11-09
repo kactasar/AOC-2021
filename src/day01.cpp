@@ -3,10 +3,10 @@
 #include <vector>
 
 int main(){
-	// Load data from the input.txt file into a vector for processing.
+	// Load data from the input file into a vector for processing.
 	// If the file is not found, cannot be opened, or contains no data an error message is printed
 	// and the program returns with a non-zero exit code.
-	std::vector<int> data {load_input("data/day01_input.txt")};
+	std::vector<int> data {load_input<int>("data/day01_input.txt")};
 	if(data.empty()){
 		std::cout << "No data loaded." << std::endl;
 		return 1;

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # All executables go into build/bin/
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-# Collect all puzzle source files automatically (src/day01.cpp, src/day02.cpp, etc.)
+# Collect all puzzle source files automatically
 file(GLOB DAY_SOURCES "${CMAKE_SOURCE_DIR}/src/day*.cpp")
 
 # Iterate over each puzzle source file

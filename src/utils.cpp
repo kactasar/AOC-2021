@@ -3,22 +3,10 @@
 #include <string>
 #include <fstream>
 #include <stdexcept>
+#include <sstream>
+#include <iostream>
 
-// Function to load integers from a file into a vector.
-std::vector<int> load_input(const std::string& filename)
-{
-	std::ifstream input_file_stream(filename);
-    // Throw an exception if the file cannot be opened.
-    if (!input_file_stream)
-		throw std::runtime_error("Failed to open input file: " + filename);
-
-    std::vector<int> input_vector;
-	for (int n; input_file_stream >> n; )
-        input_vector.push_back(n);
-	
-    return input_vector;
-}
-
+// Day 01
 // Function for solving first part of the puzzle:
 // Count how many times a measurement increases from the previous one.
 int count_increases_simple(const std::vector<int>& data){
@@ -33,7 +21,6 @@ int count_increases_simple(const std::vector<int>& data){
 	}
     return count;
 }
-
 // Function for solving second part of the puzzle:
 // Count how many times a measurement increases from the previous one, but for three-measurement-wide sliding window.
 int count_increases_sliding_window(const std::vector<int>& data){
@@ -49,4 +36,68 @@ int count_increases_sliding_window(const std::vector<int>& data){
 		}
 	}
     return count;
+}
+
+// Day 02
+int calculate_final_position(const std::vector<std::string>& data){
+	int x{0}, y{0};	
+
+	// Iterate through each line of input data to separate commands and their values.
+	for(const std::string& line : data){
+		std::string command;
+		int value;
+		std::istringstream line_stream(line);
+		
+		line_stream >> command >> value;
+		// In case of input error the failbit is set so we check the stream state and throw an exception if needed.
+		if (line_stream.fail()) {
+			throw std::runtime_error("Error: invalid input line: " + line);
+		}
+		
+		// Process each command accordingly and throw an exception if an unknown command is encountered.
+		if (command == "forward"){
+			x += value;
+		} else if (command == "down"){
+			y += value;
+		} else if (command == "up"){
+			y -= value;
+		} else {
+			throw std::runtime_error("Error: unknown command: " + command);
+		}
+	}
+
+	// Return the product of the final horizontal position and depth.
+	return x * y;
+}
+
+int calculate_final_position_with_aim(const std::vector<std::string>& data){
+	int x{0}, y{0}, aim{0};	
+
+	// Iterate through each line of input data to separate commands and their values.
+	for(const std::string& line : data){
+		std::string command;
+		int value;
+		std::istringstream line_stream(line);
+
+		line_stream >> command >> value;
+		// In case of input error the failbit is set so we check the stream state and throw an exception if needed.
+		if (line_stream.fail()) {
+			throw std::runtime_error("Error: invalid input line: " + line);
+		}
+
+		// Process each command accordingly and throw an exception if an unknown command is encountered.
+		if (command == "forward"){
+			x += value;
+			y += aim * value;
+		} else if (command == "down"){
+			aim += value;
+		} else if (command == "up"){
+			aim -= value;
+		} else {
+			throw std::runtime_error("Error: unknown command: " + command);
+		}
+	}
+
+	// Return the product of the final horizontal position and depth.
+	return x * y;
 }
