@@ -11,18 +11,19 @@ Make sure you have a C++17 compiler and CMake ≥ 3.10 installed.
 ## Build instructions (Linux / WSL)
 
 ```bash
-### Clone the repo
+# Clone the repo
 git clone https://github.com/kactasar/AOC-2021.git
 cd AOC-2021
 
-### Create and enter a build directory
+# Create and enter a build directory
 mkdir build && cd build
 
-### Configure CMake
+# Configure CMake
 cmake ..
 
-### Build all executables
+# Build all executables
 cmake --build .
+```
 
 After building, all executables will be located in build/bin/
-Puzzle input files will be automatically copied to build/bin/data/
+Puzzle input files will be automatically copied to build/bin/data/ and can be replaced with another.
