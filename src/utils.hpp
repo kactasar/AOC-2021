@@ -41,3 +41,8 @@ int count_increases_sliding_window(const std::vector<int>& data);
 // Day 02 specific utility functions.
 int calculate_final_position(const std::vector<std::string>& data);
 int calculate_final_position_with_aim(const std::vector<std::string>& data);
+
+// Day 03 specific utility functions.
+int binary_str_to_int(const std::string& str);
+unsigned long long calculate_gamma_epsilon_product(const std::vector<std::string>& data);
+unsigned long long calculate_life_support_rating(const std::vector<std::string>& data);
