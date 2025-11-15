@@ -107,6 +107,7 @@ int calculate_final_position_with_aim(const std::vector<std::string>& data){
 }
 
 // Day 03
+// Function to convert a binary string to its integer representation.
 int binary_str_to_int(const std::string& str) {
 	// Use std::stoi with base 2 to convert binary string to integer.
 	// This will throw an exception if the string is not a valid binary representation.
@@ -188,4 +189,123 @@ unsigned long long calculate_life_support_rating(const std::vector<std::string>&
 
 	// Multiply oxygen generator rating (most-common filter) by CO2 scrubber rating (least-common filter).
 	return find_rate('1') * find_rate('0');
+}
+
+// Day 04
+
+// Marks the called number on the bingo board if present by replacing it with -1
+// and updating the horizontal and vertical line counters keeping track of marked numbers.
+// Function exits after marking the first occurrence of the called number as there are no 
+// duplicate numbers on a bingo board.
+void Bingo_Board::mark_number(int called_number){
+	for (auto& row : contents){
+		for (auto& cell : row){
+			if (cell == called_number){
+				cell = -1;
+				// Update the counters for the corresponding row and column.
+				// '&row - &contents[0]' and '&cell - &row[0]' calculate the indices
+				// using pointer arithmetic.			
+				horizontal_lines[&row - &contents[0]] += 1;
+				vertical_lines[&cell - &row[0]] += 1;
+				return;
+			}
+		}
+	}
+}
+
+// Checks if any horizontal or vertical line on the bingo board is fully marked.
+bool Bingo_Board::any_line_marked(){
+	for (int i = 0 ; i < BOARDSIZE ; i++){
+		if ((horizontal_lines[i] == BOARDSIZE) || (vertical_lines[i] == BOARDSIZE))
+			return true;
+	}
+	return false;
+}
+
+// Calculates the score of the bingo board by summing all unmarked numbers
+// and multiplying the sum by the last called number as per puzzle rules.
+int Bingo_Board::calculate_score(int called_number){
+	int unmarked_sum {0};
+	for (auto& row : contents){
+		for (auto& cell : row){
+			if (cell != -1)
+				unmarked_sum += cell;
+		}
+	}
+	return unmarked_sum * called_number;
+}
+
+// Load sequence of comma separated numbers for bingo from input file into a vector.
+std::vector<int> load_bingo_sequence(std::istream& input_file) {
+	int tmp;
+	std::vector<int> bingo_sequence;
+	while (input_file >> tmp){
+		bingo_sequence.push_back(tmp);
+        // Check for comma separator and ignore it
+		if (input_file.peek() == ',')
+			input_file.ignore(1);
+		// Break if the next character is not a comma (end of sequence)
+		else 
+			break;
+	}
+    return bingo_sequence;
+}
+
+// Load bingo boards from input file into a vector of Bingo_Board structures.
+std::vector<Bingo_Board> load_bingo_boards(std::istream& input_file) {
+	std::vector<Bingo_Board> boards;
+	while (true) {
+    Bingo_Board tmp_board;
+    for (auto& row : tmp_board.contents) {
+        for (auto& cell : row) {
+            if (!(input_file >> cell)) {
+                // Stop if we run out of numbers mid-board to avoid adding incomplete boards
+                return boards;
+            }
+        }
+    }
+    boards.push_back(tmp_board);
+	}
+	return boards;
+}
+
+// Function to calculate the score of the first winning bingo board.
+int calculate_bingo_first_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards) {
+	for (auto& called_number : bingo_sequence) {
+		for (auto& board : boards) {
+			board.mark_number(called_number);
+			if (board.any_line_marked()) {
+				// Exit the function by returning the score when the first winning board is found.
+				return board.calculate_score(called_number);
+			}
+		}
+	}
+	// In case there is no winning board (which should not happen in a valid input), throw a runtime error.
+	throw std::runtime_error("No winning board found in the provided sequence.");
+}
+
+// Function to calculate the score of the last winning bingo board.
+int calculate_bingo_last_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards) {
+	int last_score = -1;
+	for (auto& called_number : bingo_sequence) {
+		auto board = boards.begin();
+		while (board != boards.end()) {
+			board->mark_number(called_number);
+			if (board->any_line_marked()) {
+				last_score = board->calculate_score(called_number);
+				// Remove the board that just won from the vector. Vector function erase() not only removes the element,
+				// but also returns the next iterator after the erased one or end() if the last element was erased so we
+				// use it to assign back to the 'board' variable.
+				board = boards.erase(board);
+			} else {
+				// Only increment the iterator if we did not erase the current board.
+				++board;
+			}
+		}
+	}
+	if (last_score == -1) {
+		// If last_score was never updated, it means no board won. Throw a runtime error.
+		throw std::runtime_error("No winning board found in the provided sequence.");
+	}
+	return last_score;
 }

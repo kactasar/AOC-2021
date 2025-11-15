@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <stdexcept>
+#include <array>
 
 // Function to load data from a file into a vector.
 template <typename T>
@@ -46,3 +47,22 @@ int calculate_final_position_with_aim(const std::vector<std::string>& data);
 int binary_str_to_int(const std::string& str);
 unsigned long long calculate_gamma_epsilon_product(const std::vector<std::string>& data);
 unsigned long long calculate_life_support_rating(const std::vector<std::string>& data);
+
+// Day 04 specific utility functions.
+
+// Bingo board structure, size and related methods.
+constexpr int BOARDSIZE {5};
+struct Bingo_Board{
+	std::array< std::array<int, BOARDSIZE>, BOARDSIZE> contents {0};
+	int horizontal_lines[BOARDSIZE] {0};
+	int vertical_lines[BOARDSIZE] {0};
+	
+	void mark_number(int called_number);
+	bool any_line_marked();
+	int calculate_score(int called_number);
+};
+
+std::vector<int> load_bingo_sequence(std::istream& input_file);
+std::vector<Bingo_Board> load_bingo_boards(std::istream& input_file);
+int calculate_bingo_first_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards);
+int calculate_bingo_last_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards);
