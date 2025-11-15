@@ -27,4 +27,4 @@ cmake --build .
 
 After building, all executables will be located in build/bin/
 
-Puzzle input files will be automatically copied to build/bin/data/ and can be replaced with another.
+Puzzle input files placed in data/ will be automatically copied to build/bin/data/ during the build process. These input files are not included in the repository and must follow the dayXX_input.txt naming scheme (e.g. day01_input.txt).

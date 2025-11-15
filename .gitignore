@@ -1,3 +1,6 @@
+# --- Puzzle input files ---
+data/*
+
 # --- Build directories ---
 /build/
 /bin/
@@ -56,9 +59,8 @@ _deps/
 # ==========================================
 #   Keep these (do NOT ignore):
 # ==========================================
-# src/ -> your source code
-# data/ -> your AoC input files
+# src/
 # CMakeLists.txt
 # README.md
-# .gitignore (this file)
+# .gitignore
 # ==========================================
