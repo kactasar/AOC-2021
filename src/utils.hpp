@@ -61,8 +61,26 @@ struct Bingo_Board{
 	bool any_line_marked();
 	int calculate_score(int called_number);
 };
-
 std::vector<int> load_bingo_sequence(std::istream& input_file);
 std::vector<Bingo_Board> load_bingo_boards(std::istream& input_file);
 int calculate_bingo_first_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards);
 int calculate_bingo_last_winner_score(const std::vector<int>& bingo_sequence, std::vector<Bingo_Board>& boards);
+
+// Day 05 specific utility functions.
+constexpr int ARRSIZE = 1000;
+
+struct Vent_Line{
+	std::pair< int, int> start_point;
+	std::pair< int, int> end_point;
+	bool vertical{false};
+	bool horizontal{false};
+	bool diagonal_down{false};
+	bool diagonal_up{false};
+	
+	Vent_Line(const std::pair< int, int>& first_point, const std::pair< int, int>& second_point);
+	void draw_line_on_diagram(std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram) const;
+};
+std::vector<Vent_Line> load_vent_lines(const std::vector<std::string>& data);
+void draw_straight_lines(const std::vector<Vent_Line>& vent_lines, std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram);
+void draw_diagonal_lines(const std::vector<Vent_Line>& vent_lines, std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram);
+int count_overlaps(const std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram);

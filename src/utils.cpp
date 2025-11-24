@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+#include <cassert>
 
 // Day 01
 // Function for solving first part of the puzzle:
@@ -308,4 +310,140 @@ int calculate_bingo_last_winner_score(const std::vector<int>& bingo_sequence, st
 		throw std::runtime_error("No winning board found in the provided sequence.");
 	}
 	return last_score;
+}
+
+// Day 05
+
+// Constructor for Vent_Line structure to initialize line properties based on start and end points and
+// determine if the line is vertical, horizontal, or diagonal (up or down).
+Vent_Line::Vent_Line(const std::pair< int, int>& first_point, const std::pair< int, int>& second_point){
+	if (first_point.first == second_point.first){
+		if (first_point.second < second_point.second){
+			start_point = first_point;
+			end_point = second_point;
+		} else { 
+			start_point = second_point;
+			end_point = first_point;
+		}
+		vertical = true;
+	} else {
+		if (first_point.first < second_point.first){
+			start_point = first_point;
+			end_point = second_point;
+		} else {
+			start_point = second_point;
+			end_point = first_point;
+		}
+		if (start_point.second < end_point.second)
+			diagonal_down = true;
+		if (start_point.second > end_point.second)
+			diagonal_up = true;
+		if (start_point.second == end_point.second)
+			horizontal = true;
+	} 
+};
+
+// Method to draw the vent line on the provided diagram by incrementing the appropriate cells.
+void Vent_Line::draw_line_on_diagram(std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram) const{
+	if (vertical == true){
+		for (int y = start_point.second ; y <= end_point.second ; y++) {
+			// Assert bounds for vertical line
+ 			assert(y >= 0 && y < ARRSIZE);
+			assert(start_point.first >= 0 && start_point.first < ARRSIZE);
+			// Vertical line | : increment cells in the same column (start_point.first) for all rows from start to end.
+			diagram[start_point.first][y] += 1;
+		}
+	} else if (horizontal == true){
+		for (int x = start_point.first ; x <= end_point.first ; x++) {
+			// Assert bounds for horizontal line
+ 			assert(x >= 0 && x < ARRSIZE);
+ 			assert(start_point.second >= 0 && start_point.second < ARRSIZE);
+			// Horizontal line - : increment cells in the same row (start_point.second) for all columns from start to end.
+			diagram[x][start_point.second] += 1;
+		}
+	} else if (diagonal_down == true){
+		int y = start_point.second;
+		for (int x = start_point.first ; x <= end_point.first ; x++){
+			// Assert bounds for diagonal down line
+			assert(x >= 0 && x < ARRSIZE);
+			assert(y >= 0 && y < ARRSIZE);
+			// Diagonal down line \ : increment cells diagonally from start to end increasing y.
+			diagram[x][y] += 1;
+			++y;
+		}
+	} else if (diagonal_up == true){
+		int y = start_point.second;
+		for (int x = start_point.first ; x <= end_point.first ; x++){
+			// Assert bounds for diagonal up line
+			assert(x >= 0 && x < ARRSIZE);
+			assert(y >= 0 && y < ARRSIZE);
+			// Diagonal up line / : increment cells diagonally from start to end decreasing y.
+			diagram[x][y] += 1;
+			--y;
+		}
+	}
+}
+
+// Function to load vent lines from input data strings into a vector of Vent_Line structures.
+std::vector<Vent_Line> load_vent_lines(const std::vector<std::string>& data) {
+	std::vector<Vent_Line> vent_lines;
+	for(const std::string& original_line : data){
+		// Replace commas with spaces and remove arrows for easier parsing with stringstream.
+		std::string line = original_line;
+		
+		std::replace(line.begin(), line.end(), ',', ' ');
+ 		// Lambda predicate to identify arrow characters.
+ 		auto is_arrow = [](char c){ return c == '-' || c == '>'; };
+ 		line.erase(std::remove_if(line.begin(), line.end(), is_arrow), line.end());
+ 		std::stringstream line_stream(line);
+		
+		// Read the two points defining the vent line from each input line.
+		std::pair<int, int> coords;
+		line_stream >> coords.first >> coords.second;
+		if (line_stream.fail()) {
+ 			throw std::runtime_error("Error: invalid vent line input (first point): " + line);
+ 		}
+		std::pair<int, int> point_1(coords.first, coords.second);
+        
+		line_stream >> coords.first >> coords.second;
+		if (line_stream.fail()) {
+ 			throw std::runtime_error("Error: invalid vent line input (second point): " + line);
+ 		}
+		std::pair<int, int> point_2(coords.first, coords.second);
+		
+		// Create a Vent_Line object and add it to the vector.
+		vent_lines.push_back(Vent_Line(point_1, point_2));
+	}
+	return vent_lines;
+}
+
+// Function to draw all straight (vertical and horizontal) vent lines on the diagram (first part of the challenge).
+void draw_straight_lines(const std::vector<Vent_Line>& vent_lines, std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram) {
+	for (const Vent_Line& line : vent_lines) {
+		if (line.vertical || line.horizontal) {
+			line.draw_line_on_diagram(diagram);
+		}
+	}
+}
+
+// Function to draw all diagonal vent lines on the diagram (second part of the challenge).
+void draw_diagonal_lines(const std::vector<Vent_Line>& vent_lines, std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram) {
+	for (const Vent_Line& line : vent_lines) {
+		if (line.diagonal_down || line.diagonal_up) {
+			line.draw_line_on_diagram(diagram);
+		}
+	}
+}
+
+// Function to count the number of points where at least two lines overlap on the diagram, 
+// the value in the cell represents the number of lines passing through it.
+int count_overlaps(const std::array<std::array<int, ARRSIZE>, ARRSIZE>& diagram) {
+	int count {0};
+	for (const auto& row : diagram){
+		for (const auto& cell : row){
+			if (cell >= 2)
+				count += 1;
+		}
+	}
+	return count;
 }

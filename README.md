@@ -6,7 +6,7 @@ Each puzzle day is built as a **separate executable** using **CMake**, with its 
 ## Building
 
 This project uses **CMake** to generate platform-specific build files.  
-Make sure you have a C++17 compiler and CMake ≥ 3.10 installed.
+Make sure you have a C++20 compiler and CMake ≥ 3.10 installed.
 
 ## Build instructions (Linux / WSL)
 
